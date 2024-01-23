@@ -5,5 +5,6 @@ import { HttpService } from './http.service';
 @Module({
   imports: [BuiltInHttpModule],
   providers: [HttpService],
+  exports: [HttpService],
 })
 export class HttpModule {}
