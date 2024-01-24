@@ -15,6 +15,7 @@ export class HttpService {
     method: Method,
     config?: HttpRequestConfig,
   ): Promise<AxiosResponse<ResBody>> {
+    // TODO: log error
     return firstValueFrom(this.builtInHttpService.request<ResBody>({ url: url, method: method, ...config }));
   }
 
