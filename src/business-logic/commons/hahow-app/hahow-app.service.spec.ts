@@ -92,21 +92,11 @@ describe('HahowAppService', () => {
       expect(result).toStrictEqual(true);
     });
 
-    it('should return false when http response status is NOT 200', async () => {
+    it('should return false when http response status is 401', async () => {
       const mockHttpResponse: Partial<Awaited<ReturnType<HttpService['post']>>> = {
         status: 401,
       };
       jest.spyOn(httpService, 'post').mockResolvedValue(mockHttpResponse as Awaited<ReturnType<HttpService['post']>>);
-
-      const result = await service.authenticate({ name: 'test', password: 'test' });
-
-      expect(result).toStrictEqual(false);
-    });
-
-    it('should return false when authenticate failure', async () => {
-      jest.spyOn(httpService, 'post').mockImplementation(() => {
-        throw new Error();
-      });
 
       const result = await service.authenticate({ name: 'test', password: 'test' });
 

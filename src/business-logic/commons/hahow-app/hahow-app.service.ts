@@ -42,16 +42,16 @@ export class HahowAppService {
 
   /**
    * Authenticate 特定的 name 及 password
+   * status 200 時回傳 true；status 401 時回傳 false；其餘情況 throw exception
    * @param data name 和 password
    */
   async authenticate(data: Dtos.AuthenticateReqBodyDto): Promise<boolean> {
     const url = `${this.APP_DOMAIN_BASE}/auth`;
-    try {
-      const httpResponse = await this.httpService.post(url, data);
-      return httpResponse.status === 200;
-    } catch (error) {
-      // TODO: log
-      return false;
-    }
+    const httpResponse = await this.httpService.post(url, data, {
+      validateStatus: (status) => {
+        return status === 200 || status === 401;
+      },
+    });
+    return httpResponse.status === 200;
   }
 }
