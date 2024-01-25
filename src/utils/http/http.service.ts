@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { AxiosRequestConfig, AxiosResponse, Method, isAxiosError } from 'axios';
 import { HttpService as BuiltInHttpService } from '@nestjs/axios';
 
 interface HttpRequestConfig extends AxiosRequestConfig {}
@@ -15,8 +15,13 @@ export class HttpService {
     method: Method,
     config?: HttpRequestConfig,
   ): Promise<AxiosResponse<ResBody>> {
-    // TODO: log error
-    return firstValueFrom(this.builtInHttpService.request<ResBody>({ url: url, method: method, ...config }));
+    try {
+      return await firstValueFrom(this.builtInHttpService.request<ResBody>({ url: url, method: method, ...config }));
+    } catch (error) {
+      if (isAxiosError(error) && error.response != null) {
+        throw new HttpException(error.response.data, error.response.status);
+      } else throw error;
+    }
   }
 
   async get<ResBody = any>(url: string, config?: HttpRequestConfig): Promise<HttpResponse<ResBody>> {
