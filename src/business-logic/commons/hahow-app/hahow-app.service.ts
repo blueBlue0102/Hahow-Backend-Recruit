@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@root/utils/http/http.service';
 import * as Dtos from './dto';
+import { objectTypeValidator } from '@root/helpers';
 
 /**
  * 負責串接 Hahow App 的 Service
@@ -17,6 +18,7 @@ export class HahowAppService {
   async getListHeroes(): Promise<Dtos.GetListHeroesResBodyDto[]> {
     const url = `${this.APP_DOMAIN_BASE}/heroes`;
     const httpResponse = await this.httpService.get<Dtos.GetListHeroesResBodyDto[]>(url);
+    httpResponse.data.forEach((data) => objectTypeValidator(Dtos.GetListHeroesResBodyDto, data));
     return httpResponse.data;
   }
 
@@ -27,6 +29,7 @@ export class HahowAppService {
   async getSingleHero(id: string): Promise<Dtos.GetSingleHeroResBodyDto> {
     const url = `${this.APP_DOMAIN_BASE}/heroes/${id}`;
     const httpResponse = await this.httpService.get<Dtos.GetSingleHeroResBodyDto>(url);
+    objectTypeValidator(Dtos.GetSingleHeroResBodyDto, httpResponse.data);
     return httpResponse.data;
   }
 
@@ -37,6 +40,7 @@ export class HahowAppService {
   async getProfileOfHero(id: string): Promise<Dtos.GetProfileOfHeroResBodyDto> {
     const url = `${this.APP_DOMAIN_BASE}/heroes/${id}/profile`;
     const httpResponse = await this.httpService.get<Dtos.GetProfileOfHeroResBodyDto>(url);
+    objectTypeValidator(Dtos.GetProfileOfHeroResBodyDto, httpResponse.data);
     return httpResponse.data;
   }
 
