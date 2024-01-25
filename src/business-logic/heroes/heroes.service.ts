@@ -13,7 +13,9 @@ export class HeroesService {
    */
   private async authenticate(name: string, password: string): Promise<void> {
     if (await this.hahowAppService.authenticate({ name, password })) return;
-    else throw new UnauthorizedException('權限驗證失敗，無法順利取得資訊');
+    else {
+      throw new UnauthorizedException(`name: ${name} 權限驗證失敗，無法順利取得資訊`);
+    }
   }
 
   /**
