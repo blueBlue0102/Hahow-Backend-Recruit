@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { HttpService } from '@root/utils/http/http.service';
 import * as Dtos from './dto';
 import { objectTypeValidator } from '@root/helpers';
@@ -18,7 +18,11 @@ export class HahowAppService {
   async getListHeroes(): Promise<Dtos.GetListHeroesResBodyDto[]> {
     const url = `${this.APP_DOMAIN_BASE}/heroes`;
     const httpResponse = await this.httpService.get<Dtos.GetListHeroesResBodyDto[]>(url);
-    httpResponse.data.forEach((data) => objectTypeValidator(Dtos.GetListHeroesResBodyDto, data));
+    try {
+      httpResponse.data.forEach((data) => objectTypeValidator(Dtos.GetListHeroesResBodyDto, data));
+    } catch (error) {
+      throw new InternalServerErrorException(`無法正確取得 hero 資訊: ${error.message}`);
+    }
     return httpResponse.data;
   }
 
@@ -29,7 +33,11 @@ export class HahowAppService {
   async getSingleHero(id: string): Promise<Dtos.GetSingleHeroResBodyDto> {
     const url = `${this.APP_DOMAIN_BASE}/heroes/${id}`;
     const httpResponse = await this.httpService.get<Dtos.GetSingleHeroResBodyDto>(url);
-    objectTypeValidator(Dtos.GetSingleHeroResBodyDto, httpResponse.data);
+    try {
+      objectTypeValidator(Dtos.GetSingleHeroResBodyDto, httpResponse.data);
+    } catch (error) {
+      throw new InternalServerErrorException(`無法正確取得 hero 資訊: ${error.message}`);
+    }
     return httpResponse.data;
   }
 
@@ -40,7 +48,11 @@ export class HahowAppService {
   async getProfileOfHero(id: string): Promise<Dtos.GetProfileOfHeroResBodyDto> {
     const url = `${this.APP_DOMAIN_BASE}/heroes/${id}/profile`;
     const httpResponse = await this.httpService.get<Dtos.GetProfileOfHeroResBodyDto>(url);
-    objectTypeValidator(Dtos.GetProfileOfHeroResBodyDto, httpResponse.data);
+    try {
+      objectTypeValidator(Dtos.GetProfileOfHeroResBodyDto, httpResponse.data);
+    } catch (error) {
+      throw new InternalServerErrorException(`無法順利取得 profile 資訊: ${error.message}`);
+    }
     return httpResponse.data;
   }
 
