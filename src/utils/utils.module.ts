@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from './http/http.module';
+import { LoggerModule } from './logger/logger.module';
 
 /**
  * Utility Library \
@@ -7,7 +8,7 @@ import { HttpModule } from './http/http.module';
  * 抽象化成介面後，提供給整份專案使用
  */
 @Module({
-  imports: [HttpModule],
-  exports: [HttpModule],
+  imports: [HttpModule, LoggerModule],
+  exports: [HttpModule, LoggerModule],
 })
 export class UtilsModule {}

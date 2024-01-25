@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { MainModule } from './main.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { LoggerService } from '@root/utils/logger/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(MainModule);
+  const app = await NestFactory.create(MainModule, {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(LoggerService));
 
   // Swagger Doc
   const config = new DocumentBuilder()
