@@ -16,6 +16,8 @@ $ pnpm install
 $ pnpm run start
 ```
 
+隨後至 `http://localhost:3000` 即可閱覽 Swagger 文件
+
 ## 測試
 
 ```bash

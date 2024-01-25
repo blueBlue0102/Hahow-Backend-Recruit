@@ -7,7 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(MainModule, {
     bufferLogs: true,
   });
-  app.useLogger(app.get(LoggerService));
+  const logger = app.get(LoggerService);
+  app.useLogger(logger);
 
   // Swagger Doc
   const config = new DocumentBuilder()
@@ -18,6 +19,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
-  await app.listen(3000);
+  const port = 3000;
+  await app.listen(port);
+  logger.log(`Hi, server listening on port ${port}`);
+  logger.log(`Connect to http://localhost:${port} to read API document`);
 }
 bootstrap();
